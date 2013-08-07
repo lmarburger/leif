@@ -1,0 +1,32 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "LEIF" "1" "August 2013" "" ""
+.
+.SH "NAME"
+\fBleif\fR \- A hypermedia browser for the CloudApp Collection+JSON API\.
+.
+.SH "SYNOPSIS"
+\fBleif\fR
+.
+.SH "DESCRIPTION"
+\fBleif\fR is a program to explore the CloudApp hypermedia API\. It was built so developers could feel how the API flows to help them consume it in their programs\.
+.
+.SH "INTERACTIVE COMMANDS"
+.
+.TP
+\fBroot\fR
+Go back to the root
+.
+.TP
+\fBfollow\fR \fIrel\fR
+Follow link with the given relation\.
+.
+.TP
+\fBbasic\fR \fIusername\fR [\fIpassword\fR]
+Authenticate with HTTP Basic and reload the current resource\. Will be prompted for password if it is omitted\.
+.
+.TP
+\fBtoken\fR \fItoken\fR
+Authenticate using the given token and reload the current resource\.
+

@@ -14,10 +14,18 @@ GEM
     faraday_middleware (0.9.0)
       faraday (>= 0.7.4, < 0.9)
     highline (1.6.19)
+    hpricot (0.8.6)
     multipart-post (1.2.0)
+    mustache (0.99.4)
+    rdiscount (2.1.6)
+    ronn (0.7.3)
+      hpricot (>= 0.8.2)
+      mustache (>= 0.7.0)
+      rdiscount (>= 1.5.8)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   leif!
+  ronn

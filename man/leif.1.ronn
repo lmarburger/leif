@@ -1,0 +1,26 @@
+# leif(1) -- A hypermedia browser for the CloudApp Collection+JSON API.
+
+## SYNOPSIS
+
+`leif`
+
+## DESCRIPTION
+
+`leif` is a program to explore the CloudApp hypermedia API. It was built so
+developers could feel how the API flows to help them consume it in their
+programs.
+
+## INTERACTIVE COMMANDS
+
+  - `root`:
+    Go back to the root
+
+  - `follow` <rel>:
+    Follow link with the given relation.
+
+  - `basic` <username> [<password>]:
+    Authenticate with HTTP Basic and reload the current resource. Will be
+    prompted for password if it is omitted.
+
+  - `token` <token>:
+    Authenticate using the given token and reload the current resource.
