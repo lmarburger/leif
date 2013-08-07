@@ -106,12 +106,8 @@ def print_response
     out.print_lines JSON.pretty_generate(@response.body).lines
   end
 
-  section 'Options' do |out|
-    if @response.headers['www-authenticate']
-      out.print 'Re-request using HTTP Basic Auth'
-    end
-    out.print "Links: #{link_relations}" unless link_relations.empty?
-    out.print 'Go to root'
+  section 'Links' do |out|
+    out.print link_relations unless link_relations.empty?
   end
 end
 
