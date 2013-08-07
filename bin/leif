@@ -36,13 +36,27 @@ end
 
 def conn
   @conn ||= Faraday.new(url: 'https://api.getcloudapp.com') do |config|
-    # config.response :logger
+    config.response :logger, logger
     config.response :json, :content_type => /\bjson$/
     config.adapter  Faraday.default_adapter
   end
 end
 
+def logger
+  @logger ||= Logger.new(debug_output)
+end
+
+def debug_output
+  @debug_output ||= StringIO.new
+end
+
+def reset_debug_output
+  debug_output.rewind
+  debug_output.truncate 0
+end
+
 def make_request(uri)
+  reset_debug_output
   @response = CollectionJsonResponse.new(conn.get(uri))
 end
 
@@ -131,6 +145,13 @@ def follow_link(relation = :ask)
   make_request @response.link(relation).href
 end
 
+def print_debug
+  section 'Debug' do |out|
+    debug_output.rewind
+    out.print_lines debug_output.readlines
+  end
+end
+
 def print_help
   puts <<EOS
     root:
@@ -155,6 +176,7 @@ def get_next_action
   when 'f', 'follow' then follow_link(*args)
   when 'b', 'basic'  then request_basic_authentication(*args)
   when 't', 'token'  then request_token_authentication(*args)
+  when 'd', 'debug'  then print_debug; get_next_action
   when '?', 'help'   then print_help; get_next_action
   when 'q', 'quit'   then exit
   else puts 'Try again.'; get_next_action
@@ -181,4 +203,6 @@ BEGIN {
   require 'json'
   require 'faraday'
   require 'faraday_middleware'
+  require 'logger'
+  require 'stringio'
 }
