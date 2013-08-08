@@ -3,15 +3,20 @@
 class CollectionJsonResponse < SimpleDelegator
   extend Forwardable
 
-  def_delegators :collection, :links, :link
+  def_delegators :collection, :href, :links, :link, :items,
+                 :template, :fill_template_field, :fill_template, :submit_template
 
   def collection
-    Collection.new body
+    @collection ||= Collection.new(body)
   end
 
   class Collection < SimpleDelegator
     def initialize(body)
       super body.fetch('collection')
+    end
+
+    def href
+      fetch('href')
     end
 
     def links
@@ -21,6 +26,26 @@ class CollectionJsonResponse < SimpleDelegator
 
     def link(relation)
       links.find {|link| link.relation == relation }
+    end
+
+    def template
+      @template ||= Item.new(fetch('template'))
+    end
+
+    def fill_template_field(name, value)
+      template[name] = value
+    end
+
+    def fill_template(item)
+      item.to_hash.each do |name, value|
+        p [name, value]
+        fill_template_field name, value
+      end
+    end
+
+    def items
+      return [] unless has_key?('items')
+      fetch('items').map {|item| Item.new(item) }
     end
   end
 
@@ -32,10 +57,39 @@ class CollectionJsonResponse < SimpleDelegator
       @href     = link.fetch('href')
     end
   end
+
+  class Item
+    attr_accessor :item
+
+    def initialize(item)
+      @item = item
+    end
+
+    def href
+      @item.fetch('href')
+    end
+
+    def data
+      @item.fetch('data')
+    end
+
+    def []=(name, value)
+      datum = data.find {|datum| datum['name'] == name }
+      return unless datum
+      datum['value'] = value
+    end
+
+    def to_hash
+      data.each_with_object({}) do |datum, data|
+        data[datum['name']] = datum['value']
+      end
+    end
+  end
 end
 
 def conn
   @conn ||= Faraday.new(url: 'https://api.getcloudapp.com') do |config|
+    config.request  :url_encoded
     config.response :logger, logger
     config.response :json, :content_type => /\bjson$/
     config.adapter  Faraday.default_adapter
@@ -55,9 +109,10 @@ def reset_debug_output
   debug_output.truncate 0
 end
 
-def make_request(uri)
+def make_request(uri, data = {}, method = :unset)
+  method = data.empty? ? :get : :post if method == :unset
   reset_debug_output
-  @response = CollectionJsonResponse.new(conn.get(uri))
+  @response = CollectionJsonResponse.new(conn.send(method, uri, data))
 end
 
 def get_root
@@ -69,11 +124,11 @@ def retry_request
 end
 
 def section(banner)
+  puts
   puts "-- #{banner} --"
   output = Output.new(1)
   yield output
   output.print '[empty]' if output.empty?
-  output.print
 end
 
 class Output
@@ -146,6 +201,58 @@ def follow_link(relation = :ask)
   make_request @response.link(relation).href
 end
 
+def create_item
+  loop do
+    section 'Create Item' do |out|
+      out.print_lines JSON.pretty_generate(@response.template.item).lines
+    end
+
+    puts
+    puts 'Fill the template to create a new item.'
+    name = ask('Name (empty to submit): ')
+    break if name.empty?
+    value = ask('Value: ')
+
+    @response.fill_template_field name, value
+  end
+
+  make_request @response.collection.href, @response.template.to_hash
+end
+
+def update_item
+  item = @response.collection.items.find do |item|
+    section 'Item' do |out|
+      out.print_lines JSON.pretty_generate(item.item).lines
+    end
+
+    puts
+    response = ask('Select this item to update [y,n]? ') do |q|
+      q.character = true
+      q.validate  = /\A[yn]\Z/
+    end
+
+    response == 'y'
+  end
+
+  @response.fill_template item
+
+  loop do
+    section 'Update Item' do |out|
+      out.print_lines JSON.pretty_generate(@response.template.item).lines
+    end
+
+    puts
+    puts 'Fill the template to update the item.'
+    name = ask('Name (empty to submit): ')
+    break if name.empty?
+    value = ask('Value: ')
+
+    @response.fill_template_field name, value
+  end
+
+  make_request item.href, @response.template.to_hash, :put
+end
+
 def print_debug
   section 'Debug' do |out|
     debug_output.rewind
@@ -161,12 +268,18 @@ def print_help
     follow <rel>:
       Follow link with the given relation.
 
-    basic <username> [<password>]:
+    template [<name>=<value>...]:
+      Fill the template with the given name/value pairs and submit.
+
+    basic [<username> [<password>]]:
       Authenticate with HTTP Basic and reload the current resource. Will be
-      prompted for password if it is omitted.
+      prompted for username and password if omitted.
 
     token <token>:
       Authenticate using the given token and reload the current resource.
+
+    debug:
+      Print debug output from the previous HTTP request and response.
 EOS
 end
 
@@ -175,6 +288,8 @@ def get_next_action
   case command
   when 'r', 'root'   then get_root
   when 'f', 'follow' then follow_link(*args)
+  when      'create' then create_item
+  when      'update' then update_item
   when 'b', 'basic'  then request_basic_authentication(*args)
   when 't', 'token'  then request_token_authentication(*args)
   when 'd', 'debug'  then print_debug; get_next_action
@@ -185,6 +300,7 @@ def get_next_action
 end
 
 def ask_for_action
+  puts
   input = ask('> ') {|q| q.readline = true }.split(/\s/)
   [ input.first, input[1..-1] ]
 end
