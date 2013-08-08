@@ -16,3 +16,38 @@ A hypermedia browser for the CloudApp Collection+JSON API.
 
   - `token` <u>token</u>:
     Authenticate using the given token and reload the current resource.
+
+## Example
+
+The UI is weak at this point and not very intuitive. To get started, here's a
+sample workflow. It should give you a general overview of what's possible.
+
+    > follow authorization
+
+    > basic arthur@dent.com
+    Password: *****
+
+    > token <token copied from response body>
+
+    > follow drops
+    > follow next
+    > follow first
+
+    > create
+
+    Name (empty to submit): name
+    Value: CloudApp
+
+    Name (empty to submit): bookmark_url
+    Value: http://getcloudapp.com
+
+    Name (empty to submit):
+
+    > root
+    > follow drops
+    > update
+
+    Name (empty to submit): name
+    Value: The Guide
+
+    Name (empty to submit):

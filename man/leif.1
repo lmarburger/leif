@@ -23,6 +23,10 @@ Go back to the root
 Follow link with the given relation\.
 .
 .TP
+\fBtemplate\fR [\fIname\fR=\fIvalue\fR\.\.\.]
+Fill the template with the given name/value pairs and submit\.
+.
+.TP
 \fBbasic\fR [\fIusername\fR [\fIpassword\fR]]
 Authenticate with HTTP Basic and reload the current resource\. Will be prompted for username and password if omitted\.
 .
@@ -33,4 +37,86 @@ Authenticate using the given token and reload the current resource\.
 .TP
 \fBdebug\fR
 Print debug output from the previous HTTP request and response\.
+.
+.SH "EXAMPLES"
+Follow a rel=account link:
+.
+.IP "" 4
+.
+.nf
+
+> follow account
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Use HTTP Basic authentication and reload the current resource:
+.
+.IP "" 4
+.
+.nf
+
+> basic
+Username: arthur@dent\.com
+Password: ********
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Set token authentication:
+.
+.IP "" 4
+.
+.nf
+
+> token abc123def456
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Create a new item filling the \fBname\fR and \fBbookmark_url\fR fields:
+.
+.IP "" 4
+.
+.nf
+
+> create
+
+Name (empty to submit): name
+Value: CloudApp
+
+Name (empty to submit): bookmark_url
+Value: http://getcloudapp\.com
+
+Name (empty to submit):
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Update an item filling the \fBpassword\fR field:
+.
+.IP "" 4
+.
+.nf
+
+> update
+
+Select this item to update [y,n]? y
+
+Name (empty to submit): password
+Value: towel
+
+Name (empty to submit):
+.
+.fi
+.
+.IP "" 0
 

@@ -18,6 +18,9 @@ programs.
   - `follow` <rel>:
     Follow link with the given relation.
 
+  - `template` [<name>=<value>...]:
+    Fill the template with the given name/value pairs and submit.
+
   - `basic` [<username> [<password>]]:
     Authenticate with HTTP Basic and reload the current resource. Will be
     prompted for username and password if omitted.
@@ -27,3 +30,42 @@ programs.
 
   - `debug`:
     Print debug output from the previous HTTP request and response.
+
+## EXAMPLES
+
+Follow a rel=account link:
+
+    > follow account
+
+Use HTTP Basic authentication and reload the current resource:
+
+    > basic
+    Username: arthur@dent.com
+    Password: ********
+
+Set token authentication:
+
+    > token abc123def456
+
+Create a new item filling the `name` and `bookmark_url` fields:
+
+    > create
+
+    Name (empty to submit): name
+    Value: CloudApp
+
+    Name (empty to submit): bookmark_url
+    Value: http://getcloudapp.com
+
+    Name (empty to submit):
+
+Update an item filling the `password` field:
+
+    > update
+
+    Select this item to update [y,n]? y
+
+    Name (empty to submit): password
+    Value: towel
+
+    Name (empty to submit):

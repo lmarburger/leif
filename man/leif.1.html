@@ -63,6 +63,7 @@
     <a href="#SYNOPSIS">SYNOPSIS</a>
     <a href="#DESCRIPTION">DESCRIPTION</a>
     <a href="#INTERACTIVE-COMMANDS">INTERACTIVE COMMANDS</a>
+    <a href="#EXAMPLES">EXAMPLES</a>
   </div>
 
   <ol class='man-decor man-head man head'>
@@ -91,12 +92,57 @@ programs.</p>
 <dl>
 <dt class="flush"><code>root</code></dt><dd><p>Go back to the root</p></dd>
 <dt><code>follow</code> <var>rel</var></dt><dd><p>Follow link with the given relation.</p></dd>
+<dt><code>template</code> [<var>name</var>=<var>value</var>...]</dt><dd><p>Fill the template with the given name/value pairs and submit.</p></dd>
 <dt><code>basic</code> [<var>username</var> [<var>password</var>]]</dt><dd><p>Authenticate with HTTP Basic and reload the current resource. Will be
 prompted for username and password if omitted.</p></dd>
 <dt><code>token</code> <var>token</var></dt><dd><p>Authenticate using the given token and reload the current resource.</p></dd>
 <dt class="flush"><code>debug</code></dt><dd><p>Print debug output from the previous HTTP request and response.</p></dd>
 </dl>
 
+
+<h2 id="EXAMPLES">EXAMPLES</h2>
+
+<p>Follow a rel=account link:</p>
+
+<pre><code>&gt; follow account
+</code></pre>
+
+<p>Use HTTP Basic authentication and reload the current resource:</p>
+
+<pre><code>&gt; basic
+Username: arthur@dent.com
+Password: ********
+</code></pre>
+
+<p>Set token authentication:</p>
+
+<pre><code>&gt; token abc123def456
+</code></pre>
+
+<p>Create a new item filling the <code>name</code> and <code>bookmark_url</code> fields:</p>
+
+<pre><code>&gt; create
+
+Name (empty to submit): name
+Value: CloudApp
+
+Name (empty to submit): bookmark_url
+Value: http://getcloudapp.com
+
+Name (empty to submit):
+</code></pre>
+
+<p>Update an item filling the <code>password</code> field:</p>
+
+<pre><code>&gt; update
+
+Select this item to update [y,n]? y
+
+Name (empty to submit): password
+Value: towel
+
+Name (empty to submit):
+</code></pre>
 
 
   <ol class='man-decor man-foot man foot'>
