@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' value='text/html;charset=utf8'>
+  <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
+  <title>leif(1) - A hypermedia browser for the CloudApp Collection+JSON API.</title>
+  <style type='text/css' media='all'>
+  /* style: man */
+  body#manpage {margin:0}
+  .mp {max-width:100ex;padding:0 9ex 1ex 4ex}
+  .mp p,.mp pre,.mp ul,.mp ol,.mp dl {margin:0 0 20px 0}
+  .mp h2 {margin:10px 0 0 0}
+  .mp > p,.mp > pre,.mp > ul,.mp > ol,.mp > dl {margin-left:8ex}
+  .mp h3 {margin:0 0 0 4ex}
+  .mp dt {margin:0;clear:left}
+  .mp dt.flush {float:left;width:8ex}
+  .mp dd {margin:0 0 0 9ex}
+  .mp h1,.mp h2,.mp h3,.mp h4 {clear:left}
+  .mp pre {margin-bottom:20px}
+  .mp pre+h2,.mp pre+h3 {margin-top:22px}
+  .mp h2+pre,.mp h3+pre {margin-top:5px}
+  .mp img {display:block;margin:auto}
+  .mp h1.man-title {display:none}
+  .mp,.mp code,.mp pre,.mp tt,.mp kbd,.mp samp,.mp h3,.mp h4 {font-family:monospace;font-size:14px;line-height:1.42857142857143}
+  .mp h2 {font-size:16px;line-height:1.25}
+  .mp h1 {font-size:20px;line-height:2}
+  .mp {text-align:justify;background:#fff}
+  .mp,.mp code,.mp pre,.mp pre code,.mp tt,.mp kbd,.mp samp {color:#131211}
+  .mp h1,.mp h2,.mp h3,.mp h4 {color:#030201}
+  .mp u {text-decoration:underline}
+  .mp code,.mp strong,.mp b {font-weight:bold;color:#131211}
+  .mp em,.mp var {font-style:italic;color:#232221;text-decoration:none}
+  .mp a,.mp a:link,.mp a:hover,.mp a code,.mp a pre,.mp a tt,.mp a kbd,.mp a samp {color:#0000ff}
+  .mp b.man-ref {font-weight:normal;color:#434241}
+  .mp pre {padding:0 4ex}
+  .mp pre code {font-weight:normal;color:#434241}
+  .mp h2+pre,h3+pre {padding-left:0}
+  ol.man-decor,ol.man-decor li {margin:3px 0 10px 0;padding:0;float:left;width:33%;list-style-type:none;text-transform:uppercase;color:#999;letter-spacing:1px}
+  ol.man-decor {width:100%}
+  ol.man-decor li.tl {text-align:left}
+  ol.man-decor li.tc {text-align:center;letter-spacing:4px}
+  ol.man-decor li.tr {text-align:right;float:right}
+  </style>
+  <style type='text/css' media='all'>
+  /* style: toc */
+  .man-navigation {display:block !important;position:fixed;top:0;left:113ex;height:100%;width:100%;padding:48px 0 0 0;border-left:1px solid #dbdbdb;background:#eee}
+  .man-navigation a,.man-navigation a:hover,.man-navigation a:link,.man-navigation a:visited {display:block;margin:0;padding:5px 2px 5px 30px;color:#999;text-decoration:none}
+  .man-navigation a:hover {color:#111;text-decoration:underline}
+  </style>
+</head>
+<!--
+  The following styles are deprecated and will be removed at some point:
+  div#man, div#man ol.man, div#man ol.head, div#man ol.man.
+
+  The .man-page, .man-decor, .man-head, .man-foot, .man-title, and
+  .man-navigation should be used instead.
+-->
+<body id='manpage'>
+  <div class='mp' id='man'>
+
+  <div class='man-navigation' style='display:none'>
+    <a href="#NAME">NAME</a>
+    <a href="#SYNOPSIS">SYNOPSIS</a>
+    <a href="#DESCRIPTION">DESCRIPTION</a>
+    <a href="#INTERACTIVE-COMMANDS">INTERACTIVE COMMANDS</a>
+    <a href="#EXAMPLES">EXAMPLES</a>
+  </div>
+
+  <ol class='man-decor man-head man head'>
+    <li class='tl'>leif(1)</li>
+    <li class='tc'></li>
+    <li class='tr'>leif(1)</li>
+  </ol>
+
+  <h2 id="NAME">NAME</h2>
+<p class="man-name">
+  <code>leif</code> - <span class="man-whatis">A hypermedia browser for the CloudApp Collection+JSON API.</span>
+</p>
+
+<h2 id="SYNOPSIS">SYNOPSIS</h2>
+
+<p><code>leif</code></p>
+
+<h2 id="DESCRIPTION">DESCRIPTION</h2>
+
+<p><code>leif</code> is a program to explore the CloudApp hypermedia API. It was built so
+developers could feel how the API flows to help them consume it in their
+programs.</p>
+
+<h2 id="INTERACTIVE-COMMANDS">INTERACTIVE COMMANDS</h2>
+
+<dl>
+<dt class="flush"><code>root</code></dt><dd><p>Go back to the root</p></dd>
+<dt><code>follow</code> <var>rel</var></dt><dd><p>Follow link with the given relation.</p></dd>
+<dt><code>template</code> [<var>name</var>=<var>value</var>...]</dt><dd><p>Fill the template with the given name/value pairs and submit.</p></dd>
+<dt><code>basic</code> [<var>username</var> [<var>password</var>]]</dt><dd><p>Authenticate with HTTP Basic and reload the current resource. Will be
+prompted for username and password if omitted.</p></dd>
+<dt><code>token</code> <var>token</var></dt><dd><p>Authenticate using the given token and reload the current resource.</p></dd>
+<dt class="flush"><code>debug</code></dt><dd><p>Print debug output from the previous HTTP request and response.</p></dd>
+</dl>
+
+
+<h2 id="EXAMPLES">EXAMPLES</h2>
+
+<p>Follow a rel=account link:</p>
+
+<pre><code>&gt; follow account
+</code></pre>
+
+<p>Use HTTP Basic authentication and reload the current resource:</p>
+
+<pre><code>&gt; basic
+Username: arthur@dent.com
+Password: ********
+</code></pre>
+
+<p>Set token authentication:</p>
+
+<pre><code>&gt; token abc123def456
+</code></pre>
+
+<p>Create a new item filling the <code>name</code> and <code>bookmark_url</code> fields:</p>
+
+<pre><code>&gt; create
+
+Name (empty to submit): name
+Value: CloudApp
+
+Name (empty to submit): bookmark_url
+Value: http://getcloudapp.com
+
+Name (empty to submit):
+</code></pre>
+
+<p>Update an item filling the <code>password</code> field:</p>
+
+<pre><code>&gt; update
+
+Select this item to update [y,n]? y
+
+Name (empty to submit): password
+Value: towel
+
+Name (empty to submit):
+</code></pre>
+
+
+  <ol class='man-decor man-foot man foot'>
+    <li class='tl'></li>
+    <li class='tc'>August 2013</li>
+    <li class='tr'>leif(1)</li>
+  </ol>
+
+  </div>
+</body>
+</html>
