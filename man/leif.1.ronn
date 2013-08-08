@@ -18,9 +18,9 @@ programs.
   - `follow` <rel>:
     Follow link with the given relation.
 
-  - `basic` <username> [<password>]:
+  - `basic` [<username> [<password>]]:
     Authenticate with HTTP Basic and reload the current resource. Will be
-    prompted for password if it is omitted.
+    prompted for username and password if omitted.
 
   - `token` <token>:
     Authenticate using the given token and reload the current resource.

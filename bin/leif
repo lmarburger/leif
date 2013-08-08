@@ -129,7 +129,8 @@ def link_relations
   @response.links.map(&:relation).join(', ')
 end
 
-def request_basic_authentication(username, password = :ask)
+def request_basic_authentication(username = :ask, password = :ask)
+  username = ask('Username: ')                     if username == :ask
   password = ask('Password: ') {|q| q.echo = '*' } if password == :ask
   conn.basic_auth username, password
   retry_request
