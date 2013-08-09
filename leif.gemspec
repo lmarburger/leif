@@ -15,6 +15,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'faraday',            '~> 0.8.8'
   spec.add_dependency 'faraday_middleware', '~> 0.9.0'
   spec.add_dependency 'highline',           '~> 1.6.19'
+  spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'ronn'
 
   spec.bindir      = 'bin'
