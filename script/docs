@@ -1,0 +1,7 @@
+#!/bin/sh
+
+git co gh-pages
+git show master:man/leif.1.html > index.html &&
+  git add index.html &&
+  git commit -m "Update docs"
+git co -
