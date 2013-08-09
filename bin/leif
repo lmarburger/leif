@@ -1,91 +1,5 @@
 #!/usr/bin/env ruby
 
-class CollectionJsonResponse < SimpleDelegator
-  extend Forwardable
-
-  def_delegators :collection, :href, :links, :link, :items,
-                 :template, :fill_template_field, :fill_template, :submit_template
-
-  def collection
-    @collection ||= Collection.new(body)
-  end
-
-  class Collection < SimpleDelegator
-    def initialize(body)
-      super body.fetch('collection')
-    end
-
-    def href
-      fetch('href')
-    end
-
-    def links
-      return [] unless has_key?('links')
-      fetch('links').map {|link| Link.new(link) }
-    end
-
-    def link(relation)
-      links.find {|link| link.relation == relation }
-    end
-
-    def template
-      @template ||= Item.new(fetch('template'))
-    end
-
-    def fill_template_field(name, value)
-      template[name] = value
-    end
-
-    def fill_template(item)
-      item.to_hash.each do |name, value|
-        fill_template_field name, value
-      end
-    end
-
-    def items
-      return [] unless has_key?('items')
-      fetch('items').map {|item| Item.new(item) }
-    end
-  end
-
-  class Link
-    attr_accessor :relation, :href
-
-    def initialize(link)
-      @relation = link.fetch('rel')
-      @href     = link.fetch('href')
-    end
-  end
-
-  class Item
-    attr_accessor :item
-
-    def initialize(item)
-      @item = item
-    end
-
-    def href
-      @item.fetch('href')
-    end
-
-    def data
-      @item.fetch('data')
-    end
-
-    def []=(name, value)
-      datum = data.find {|datum| datum['name'] == name }
-      return unless datum
-      datum['value'] = value
-    end
-
-    def to_hash
-      data.each_with_object({}) do |datum, data|
-        data[datum['name']] = datum['value']
-      end
-    end
-  end
-end
-
 def conn
   @conn ||= Faraday.new(url: 'https://api.getcloudapp.com') do |config|
     config.request  :url_encoded
@@ -111,7 +25,7 @@ end
 def make_request(uri, data = {}, method = :unset)
   method = data.empty? ? :get : :post if method == :unset
   reset_debug_output
-  @response = CollectionJsonResponse.new(conn.send(method, uri, data))
+  @response = Leif::CollectionJson::FaradayResponse.new(conn.send(method, uri, data))
 end
 
 def get_root
@@ -313,12 +227,11 @@ loop do
 end
 
 BEGIN {
-  require 'delegate'
-  require 'forwardable'
   require 'highline/import'
   require 'json'
   require 'faraday'
   require 'faraday_middleware'
   require 'logger'
   require 'stringio'
+  require 'leif/collection_json'
 }
