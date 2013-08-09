@@ -2,6 +2,25 @@
 
 A hypermedia browser for the CloudApp Collection+JSON API.
 
+## Requirements
+
+`leif` requires Ruby 1.9.3 or greater. Windows is not yet supported. If you're
+willing to lend a hand, we'd love to officially support it.
+
+## Installation
+
+``` bash
+$ gem install leif
+$ leif
+```
+
+`leif` includes a man page. To read it:
+
+``` bash
+$ gem install gem-man
+$ gem man leif
+```
+
 ## Interactive Commands
 
   - `root`:
@@ -16,6 +35,9 @@ A hypermedia browser for the CloudApp Collection+JSON API.
 
   - `token` <u>token</u>:
     Authenticate using the given token and reload the current resource.
+
+  - `help`:
+    Print interactive command help.
 
 ## Example
 
