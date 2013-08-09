@@ -1,3 +1,4 @@
+require 'delegate'
 require 'forwardable'
 
 module Leif
@@ -10,36 +11,47 @@ module Leif
         @data = body.fetch('collection')
       end
 
-      def href
-        fetch('href')
+      def link_href(relation)
+        links.find {|link| link.fetch('rel') == relation }.fetch('href')
+      end
+
+      def link_relations
+        links.map {|link| link.fetch('rel') }
       end
 
       def links
         return [] unless has_key?('links')
-        fetch('links').map {|link| Leif::CollectionJson::Link.new(link) }
+        fetch('links')
       end
 
-      def link(relation)
-        links.find {|link| link.relation == relation }
+      def collection_template
+        Template.new(fetch('template'), fetch('href'), :post)
       end
 
-      def template
-        @template ||= Item.new(fetch('template'))
-      end
+      class Template < SimpleDelegator
+        attr_accessor :href, :method
 
-      def fill_template_field(name, value)
-        template[name] = value
-      end
-
-      def fill_template(item)
-        item.to_hash.each do |name, value|
-          fill_template_field name, value
+        def initialize(template, href, method)
+          @href   = href
+          @method = method
+          super template
         end
-      end
 
-      def items
-        return [] unless has_key?('items')
-        fetch('items').map {|item| Item.new(item) }
+        def convert_to_json
+          fetch('data').each_with_object({}) do |datum, json|
+            json[datum['name']] = datum['value']
+          end
+        end
+
+        def fill_field(name, value)
+          new_data = fetch('data').map {|datum|
+            datum = datum.clone
+            datum['value'] = value if datum['name'] == name
+            datum
+          }
+          new_template = {'data' => new_data }
+          Template.new(new_template, href, method)
+        end
       end
     end
   end

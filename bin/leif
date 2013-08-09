@@ -25,7 +25,11 @@ end
 def make_request(uri, data = {}, method = :unset)
   method = data.empty? ? :get : :post if method == :unset
   reset_debug_output
-  @response = Leif::CollectionJson::FaradayResponse.new(conn.send(method, uri, data))
+  @response = conn.send(method, uri, data)
+end
+
+def collection
+  Leif::CollectionJson::Collection.new(@response.body)
 end
 
 def get_root
@@ -89,12 +93,10 @@ def print_response
   end
 
   section 'Links' do |out|
-    out.print link_relations unless link_relations.empty?
+    unless collection.link_relations.empty?
+      out.print collection.link_relations.join(', ')
+    end
   end
-end
-
-def link_relations
-  @response.links.map(&:relation).join(', ')
 end
 
 def request_basic_authentication(username = :ask, password = :ask)
@@ -111,13 +113,15 @@ end
 
 def follow_link(relation = :ask)
   relation = ask('Relation: ') if relation == :ask
-  make_request @response.link(relation).href
+  make_request collection.link_href(relation)
 end
 
 def create_item
+  template = collection.collection_template
+
   loop do
     section 'Create Item' do |out|
-      out.print_lines JSON.pretty_generate(@response.template.item).lines
+      out.print_lines JSON.pretty_generate(template).lines
     end
 
     puts
@@ -126,16 +130,16 @@ def create_item
     break if name.empty?
     value = ask('Value: ')
 
-    @response.fill_template_field name, value
+    template = template.fill_field name, value
   end
 
-  make_request @response.collection.href, @response.template.to_hash
+  make_request template.href, template.convert_to_json, template.method
 end
 
 def update_item
-  item = @response.collection.items.find do |item|
+  item = collection.items.find do |item|
     section 'Item' do |out|
-      out.print_lines JSON.pretty_generate(item.item).lines
+      out.print_lines JSON.pretty_generate(item).lines
     end
 
     puts
@@ -147,11 +151,11 @@ def update_item
     response == 'y'
   end
 
-  @response.fill_template item
+  template = collection.item_template item
 
   loop do
     section 'Update Item' do |out|
-      out.print_lines JSON.pretty_generate(@response.template.item).lines
+      out.print_lines JSON.pretty_generate(template).lines
     end
 
     puts
@@ -160,10 +164,10 @@ def update_item
     break if name.empty?
     value = ask('Value: ')
 
-    @response.fill_template_field name, value
+    template = template.fill_field name, value
   end
 
-  make_request item.href, @response.template.to_hash, :put
+  make_request template.href, template.convert_to_json, template.method
 end
 
 def print_debug
