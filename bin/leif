@@ -38,7 +38,6 @@ class CollectionJsonResponse < SimpleDelegator
 
     def fill_template(item)
       item.to_hash.each do |name, value|
-        p [name, value]
         fill_template_field name, value
       end
     end
