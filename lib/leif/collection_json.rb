@@ -3,14 +3,7 @@ require 'forwardable'
 
 module Leif
   module CollectionJson
-    class Collection
-      extend Forwardable
-      def_delegators :@data, :fetch, :has_key?
-
-      def initialize(body)
-        @data = body.fetch('collection')
-      end
-
+    module Linked
       def link_href(relation)
         links.find {|link| link.fetch('rel') == relation }.fetch('href')
       end
@@ -23,10 +16,34 @@ module Leif
         return [] unless has_key?('links')
         fetch('links')
       end
+    end
+
+    class Collection
+      extend  Forwardable
+      include Linked
+
+      def_delegators :@data, :fetch, :has_key?
+
+      def initialize(body)
+        @data = body.fetch('collection')
+      end
+
+      # def link_href(relation)
+      #   links.find {|link| link.fetch('rel') == relation }.fetch('href')
+      # end
+
+      # def link_relations
+      #   links.map {|link| link.fetch('rel') }
+      # end
+
+      # def links
+      #   return [] unless has_key?('links')
+      #   fetch('links')
+      # end
 
       def items
         return [] unless has_key?('items')
-        fetch('items')
+        fetch('items').map {|item| Item.new(item) }
       end
 
       def template(href = fetch('href'), method = :post)
@@ -38,6 +55,10 @@ module Leif
         item.fetch('data').inject(template) {|template, datum|
           template.fill_field datum.fetch('name'), datum.fetch('value')
         }
+      end
+
+      class Item < SimpleDelegator
+        include Linked
       end
 
       class Template < SimpleDelegator

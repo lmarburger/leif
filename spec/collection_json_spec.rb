@@ -45,12 +45,16 @@ describe Leif::CollectionJson::Collection do
     let(:body) {{ "collection" => { "items" => items } }}
     let(:items) {[{
       "href" => "https://api.getcloudapp.com/drops/1",
+      "links" => [{ "rel" => "collection",
+                  "href"  => "https://api.getcloudapp.com/drops" }],
       "data" => [
         { "name" => "id",   "value" => 1 },
         { "name" => "name", "value" => "Hitchhiker's Guide" }
       ]
     }, {
       "href" => "https://api.getcloudapp.com/drops/2",
+      "links" => [{ "rel" => "collection",
+                  "href"  => "https://api.getcloudapp.com/drops" }],
       "data" => [
         { "name" => "id",   "value" => 2 },
         { "name" => "name", "value" => "The Restaurant" }
@@ -60,6 +64,15 @@ describe Leif::CollectionJson::Collection do
 
     it 'returns the items' do
       expect(subject).to eq(items)
+    end
+
+    it "can retrieve the items's link relations" do
+      expect(subject.first.link_relations).to eq(['collection'])
+    end
+
+    it "can retrieve the link's href" do
+      expect(subject.first.link_href('collection')).
+        to eq('https://api.getcloudapp.com/drops')
     end
 
     context 'with no items' do

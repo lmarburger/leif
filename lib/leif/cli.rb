@@ -60,11 +60,7 @@ module Leif
         out.print JSON.pretty_generate(@response.body).lines
       end
 
-      banner 'Links' do |out|
-        unless collection.link_relations.empty?
-          out.print collection.link_relations.join(', ')
-        end
-      end
+      print_links collection
     end
 
     def request_basic_authentication(username = :ask, password = :ask)
@@ -79,9 +75,9 @@ module Leif
       retry_request
     end
 
-    def follow_link(relation = :ask)
+    def follow_link(subject, relation = :ask)
       relation = ask('Relation: ') if relation == :ask
-      make_request collection.link_href(relation)
+      make_request subject.link_href(relation)
     end
 
     def create_item
@@ -101,21 +97,7 @@ module Leif
       make_request template.href, template.convert_to_json, template.method
     end
 
-    def update_item
-      item = collection.items.find do |item|
-        banner 'Item' do |out|
-          out.print JSON.pretty_generate(item).lines
-        end
-
-        puts
-        response = ask('Select this item to update [y,n]? ') do |q|
-          q.character = true
-          q.validate  = /\A[yn]\Z/
-        end
-
-        response == 'y'
-      end
-
+    def update(item)
       template = collection.item_template item
 
       loop do
@@ -149,6 +131,14 @@ module Leif
       end
     end
 
+    def print_links(subject)
+      banner 'Links' do |out|
+        unless subject.link_relations.empty?
+          out.print subject.link_relations.join(', ')
+        end
+      end
+    end
+
     def print_template(template = collection.template, label = 'Template')
       banner label do |out|
         out.print JSON.pretty_generate(template).lines
@@ -156,7 +146,30 @@ module Leif
     end
 
     def print_items
-      raise 'items'
+      item = select_item
+      print_links item
+      get_next_item_action item
+    rescue Interrupt
+      print '^C'
+    end
+
+    def print_item(item)
+      banner 'Item' do |out|
+        out.print JSON.pretty_generate(item).lines
+      end
+    end
+
+    def select_item
+      collection.items.find do |item|
+        print_item item
+        puts
+        response = ask('Select this item [y,n]? ') do |q|
+          q.character = true
+          q.validate  = /\A[yn]\Z/
+        end
+
+        response == 'y'
+      end
     end
 
     def print_debug
@@ -167,39 +180,94 @@ module Leif
     end
 
     def print_help
-      puts <<EOS
-    root:
-      Go back to the root
+      banner 'Help' do |out|
+        out.print <<EOS.lines
+root:
+  Go back to the root.
 
-    follow <rel>:
-      Follow link with the given relation.
+follow <rel>:
+  Follow link with the relation <rel> on the collection.
 
-    template [<name>=<value>...]:
-      Fill the template with the given name/value pairs and submit.
+create:
+  Begin editing the template to create a new item.
 
-    basic [<username> [<password>]]:
-      Authenticate with HTTP Basic and reload the current resource. Will be
-      prompted for username and password if omitted.
+request:
+  Reprint the details of the last request.
 
-    token <token>:
-      Authenticate using the given token and reload the current resource.
+response:
+  Reprint the details of the last response.
 
-    debug:
-      Print debug output from the previous HTTP request and response.
+template:
+  Print the template from the last response.
+
+items:
+  Print each item from the last response one at a time in order to update,
+  delete, or follow an item's link.
+
+basic [<username> [<password>]]:
+  Authenticate with HTTP Basic and reload the current resource. Will be
+  prompted for username and password if omitted.
+
+token <token>:
+  Authenticate using the given token and reload the current resource.
+
+debug:
+  Print debug output from the previous HTTP request and response.
+
+quit:
+  Exit leif.
 EOS
+      end
+    end
+
+    def print_item_help
+      banner 'Help' do |out|
+        out.print <<EOS.lines
+item:
+  Print the selected item.
+
+cancel:
+  Cancel item selection and go back to the collection.
+
+follow <rel>:
+  Follow link with the relation <rel> on the selected item.
+
+update:
+  Begin editing the template to update the selected item.
+
+quit:
+  Exit leif.
+EOS
+      end
+    end
+
+    def get_next_item_action(item)
+      command, args = ask_for_action
+      case command
+      when 'item'        then print_item(item); get_next_item_action(item)
+      when 'update'      then update(item)
+      when 'f', 'follow' then follow_link(item, *args)
+      when 'cancel'
+      when 'q', 'quit'   then exit
+      when '?', 'help'   then print_item_help; get_next_item_action(item)
+      else puts 'Try again.'; get_next_item_action(item)
+      end
+    rescue Interrupt
+      print '^C'
     end
 
     def get_next_action
       command, args = ask_for_action
       case command
       when 'r', 'root'   then get_root
-      when 'f', 'follow' then follow_link(*args)
+      when 'f', 'follow' then follow_link(collection, *args)
       when      'create' then create_item
       when      'update' then update_item
 
       when 'request'     then print_request;  get_next_action
       when 'response'    then print_response; get_next_action
       when 'template'    then print_template; get_next_action
+      when 'items'       then print_items
 
       when 'b', 'basic'  then request_basic_authentication(*args)
       when 't', 'token'  then request_token_authentication(*args)
