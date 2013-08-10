@@ -25,20 +25,51 @@ $ gem man leif
 ## Interactive Commands
 
   - `root`:
-    Go back to the root
+    Go back to the root.
 
   - `follow` <u>rel</u>:
-    Follow link with the given relation.
+    Follow link with the relation <u>rel</u> on the collection or selected item.
 
-  - `basic` <u>username</u> [<u>password</u>]:
+  - `create`:
+    Begin editing the template to create a new item.
+
+  - `update`:
+    Begin editing the template to update the item selected with `items`.
+
+  - `request`:
+    Reprint the details of the last request.
+
+  - `response`:
+    Reprint the details of the last response.
+
+  - `collection`:
+    Print the collection from the last response.
+
+  - `template`:
+    Print the template from the last response.
+
+  - `items`:
+    Print each item from the last response one at a time in order to `update`
+    or `follow` an item's link.
+
+  - `item`:
+    Print the selected item.
+
+  - `basic` [<u>username</u> [<u>password</u>]]:
     Authenticate with HTTP Basic and reload the current resource. Will be
-    prompted for password if it is omitted.
+    prompted for username and password if omitted.
 
   - `token` <u>token</u>:
     Authenticate using the given token and reload the current resource.
 
+  - `debug`:
+    Print debug output from the previous HTTP request and response.
+
   - `help`:
-    Print interactive command help.
+    Print available commands.
+
+  - `quit`:
+    Exit `leif`.
 
 ## Example
 
