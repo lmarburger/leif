@@ -90,13 +90,22 @@ programs.</p>
 <h2 id="INTERACTIVE-COMMANDS">INTERACTIVE COMMANDS</h2>
 
 <dl>
-<dt class="flush"><code>root</code></dt><dd><p>Go back to the root</p></dd>
-<dt><code>follow</code> <var>rel</var></dt><dd><p>Follow link with the given relation.</p></dd>
-<dt><code>template</code> [<var>name</var>=<var>value</var>...]</dt><dd><p>Fill the template with the given name/value pairs and submit.</p></dd>
+<dt class="flush"><code>root</code></dt><dd><p>Go back to the root.</p></dd>
+<dt><code>follow</code> <var>rel</var></dt><dd><p>Follow link with the relation <var>rel</var> on the collection or selected item.</p></dd>
+<dt class="flush"><code>create</code></dt><dd><p>Begin editing the template to create a new item.</p></dd>
+<dt class="flush"><code>update</code></dt><dd><p>Begin editing the template to update the item selected with <code>items</code>.</p></dd>
+<dt class="flush"><code>request</code></dt><dd><p>Reprint the details of the last request.</p></dd>
+<dt><code>response</code></dt><dd><p>Reprint the details of the last response.</p></dd>
+<dt><code>template</code></dt><dd><p>Print the template from the last response.</p></dd>
+<dt class="flush"><code>items</code></dt><dd><p>Print each item from the last response one at a time in order to update,
+delete, or follow an item's link.</p></dd>
+<dt class="flush"><code>item</code></dt><dd><p>Print the selected item.</p></dd>
 <dt><code>basic</code> [<var>username</var> [<var>password</var>]]</dt><dd><p>Authenticate with HTTP Basic and reload the current resource. Will be
 prompted for username and password if omitted.</p></dd>
 <dt><code>token</code> <var>token</var></dt><dd><p>Authenticate using the given token and reload the current resource.</p></dd>
 <dt class="flush"><code>debug</code></dt><dd><p>Print debug output from the previous HTTP request and response.</p></dd>
+<dt class="flush"><code>help</code></dt><dd><p>Print available commands.</p></dd>
+<dt class="flush"><code>quit</code></dt><dd><p>Exit <code>leif</code>.</p></dd>
 </dl>
 
 
@@ -142,6 +151,18 @@ Name (empty to submit): password
 Value: towel
 
 Name (empty to submit):
+</code></pre>
+
+<p>JSON primitives (null, integers, and booleans) are interpreted as such. Use
+quotes for literal strings.</p>
+
+<pre><code>&gt; create
+
+Name (empty to submit): private
+Value: true
+
+Name (empty to submit): name
+Value: "true"
 </code></pre>
 
 
