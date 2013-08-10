@@ -58,9 +58,17 @@ programs.
 
 ## EXAMPLES
 
-Follow a rel=account link:
+Follow a rel=account link on the collection:
 
     > follow account
+
+Select an item and follow its rel=collection link:
+
+    > items
+
+    Select this item [y,n]? y
+
+    > follow collection
 
 Use HTTP Basic authentication and reload the current resource:
 
@@ -86,9 +94,11 @@ Create a new item filling the `name` and `bookmark_url` fields:
 
 Update an item filling the `password` field:
 
-    > update
+    > items
 
-    Select this item to update [y,n]? y
+    Select this item [y,n]? y
+
+    > update
 
     Name (empty to submit): password
     Value: towel

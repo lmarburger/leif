@@ -71,13 +71,30 @@ Print available commands\.
 Exit \fBleif\fR\.
 .
 .SH "EXAMPLES"
-Follow a rel=account link:
+Follow a rel=account link on the collection:
 .
 .IP "" 4
 .
 .nf
 
 > follow account
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Select an item and follow its rel=collection link:
+.
+.IP "" 4
+.
+.nf
+
+> items
+
+Select this item [y,n]? y
+
+> follow collection
 .
 .fi
 .
@@ -139,9 +156,11 @@ Update an item filling the \fBpassword\fR field:
 .
 .nf
 
-> update
+> items
 
-Select this item to update [y,n]? y
+Select this item [y,n]? y
+
+> update
 
 Name (empty to submit): password
 Value: towel
