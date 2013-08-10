@@ -25,6 +25,7 @@ module Leif
     end
 
     def banner(banner, &message)
+      puts
       Section.banner(banner, &message)
     end
 
