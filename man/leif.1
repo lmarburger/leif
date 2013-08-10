@@ -16,11 +16,11 @@
 .
 .TP
 \fBroot\fR
-Go back to the root
+Go back to the root\.
 .
 .TP
 \fBfollow\fR \fIrel\fR
-Follow link with the relation \fIrel\fR\.
+Follow link with the relation \fIrel\fR on the collection or selected item\.
 .
 .TP
 \fBcreate\fR
@@ -28,7 +28,7 @@ Begin editing the template to create a new item\.
 .
 .TP
 \fBupdate\fR
-Iterate through each item in the last response\. Upon selection, begin editing the template to update it\.
+Begin editing the template to update the item selected with \fBitems\fR\.
 .
 .TP
 \fBrequest\fR
@@ -43,6 +43,14 @@ Reprint the details of the last response\.
 Print the template from the last response\.
 .
 .TP
+\fBitems\fR
+Print each item from the last response one at a time in order to update, delete, or follow an item\'s link\.
+.
+.TP
+\fBitem\fR
+Print the selected item\.
+.
+.TP
 \fBbasic\fR [\fIusername\fR [\fIpassword\fR]]
 Authenticate with HTTP Basic and reload the current resource\. Will be prompted for username and password if omitted\.
 .
@@ -53,6 +61,14 @@ Authenticate using the given token and reload the current resource\.
 .TP
 \fBdebug\fR
 Print debug output from the previous HTTP request and response\.
+.
+.TP
+\fBhelp\fR
+Print available commands\.
+.
+.TP
+\fBquit\fR
+Exit \fBleif\fR\.
 .
 .SH "EXAMPLES"
 Follow a rel=account link:

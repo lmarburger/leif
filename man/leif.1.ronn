@@ -13,17 +13,16 @@ programs.
 ## INTERACTIVE COMMANDS
 
   - `root`:
-    Go back to the root
+    Go back to the root.
 
   - `follow` <rel>:
-    Follow link with the relation <rel>.
+    Follow link with the relation <rel> on the collection or selected item.
 
   - `create`:
     Begin editing the template to create a new item.
 
   - `update`:
-    Iterate through each item in the last response. Upon selection, begin
-    editing the template to update it.
+    Begin editing the template to update the item selected with `items`.
 
   - `request`:
     Reprint the details of the last request.
@@ -34,6 +33,13 @@ programs.
   - `template`:
     Print the template from the last response.
 
+  - `items`:
+    Print each item from the last response one at a time in order to update,
+    delete, or follow an item's link.
+
+  - `item`:
+    Print the selected item.
+
   - `basic` [<username> [<password>]]:
     Authenticate with HTTP Basic and reload the current resource. Will be
     prompted for username and password if omitted.
@@ -43,6 +49,12 @@ programs.
 
   - `debug`:
     Print debug output from the previous HTTP request and response.
+
+  - `help`:
+    Print available commands.
+
+  - `quit`:
+    Exit `leif`.
 
 ## EXAMPLES
 
