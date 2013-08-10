@@ -55,11 +55,7 @@ module Leif
     def print_overview
       print_request
       print_response
-
-      banner 'Body' do |out|
-        out.print JSON.pretty_generate(@response.body).lines
-      end
-
+      print_body
       print_links collection
     end
 
@@ -128,6 +124,12 @@ module Leif
         out.print @response.headers.map {|header, value|
           "#{header}: #{value}"
         }
+      end
+    end
+
+    def print_body
+      banner 'Body' do |out|
+        out.print JSON.pretty_generate(@response.body).lines
       end
     end
 
@@ -272,6 +274,7 @@ EOS
 
       when 'request'     then print_request;    get_next_action
       when 'response'    then print_response;   get_next_action
+      when 'body'        then print_body;       get_next_action
       when 'collection'  then print_collection; get_next_action
       when 'template'    then print_template;   get_next_action
       when 'items'       then print_items

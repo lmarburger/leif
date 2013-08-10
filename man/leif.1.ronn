@@ -25,10 +25,13 @@ programs.
     Begin editing the template to update the item selected with `items`.
 
   - `request`:
-    Reprint the details of the last request.
+    Print the HTTP headers of the last request.
 
   - `response`:
-    Reprint the details of the last response.
+    Print the HTTP headers of the last response.
+
+  - `body`:
+    Print the HTTP body of the last response.
 
   - `collection`:
     Print the collection from the last response.
