@@ -3,11 +3,6 @@ require 'leif/cli'
 require 'leif/collection_json'
 require 'leif/section'
 
-trap('INT') do
-  puts
-  exit
-end
-
 Leif::Cli.new.tap do |cli|
   cli.get_root
   loop do

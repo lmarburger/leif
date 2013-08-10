@@ -209,6 +209,12 @@ EOS
       when 'q', 'quit'   then exit
       else puts 'Try again.'; get_next_action
       end
+    rescue Interrupt
+      print '^C'
+      get_next_action
+    rescue EOFError
+      puts
+      exit
     end
 
     def ask_for_action
