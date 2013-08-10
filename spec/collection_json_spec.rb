@@ -1,4 +1,4 @@
-require 'leif/collection_json/collection'
+require 'leif/collection_json'
 
 describe Leif::CollectionJson::Collection do
   let(:collection) { Leif::CollectionJson::Collection.new(body) }
@@ -41,7 +41,37 @@ describe Leif::CollectionJson::Collection do
     end
   end
 
-  describe '#collection_template' do
+  describe '#items' do
+    let(:body) {{ "collection" => { "items" => items } }}
+    let(:items) {[{
+      "href" => "https://api.getcloudapp.com/drops/1",
+      "data" => [
+        { "name" => "id",   "value" => 1 },
+        { "name" => "name", "value" => "Hitchhiker's Guide" }
+      ]
+    }, {
+      "href" => "https://api.getcloudapp.com/drops/2",
+      "data" => [
+        { "name" => "id",   "value" => 2 },
+        { "name" => "name", "value" => "The Restaurant" }
+      ]
+    }]}
+    subject { collection.items }
+
+    it 'returns the items' do
+      expect(subject).to eq(items)
+    end
+
+    context 'with no items' do
+      let(:body) {{ "collection" => {} }}
+
+      it 'is empty' do
+        expect(subject).to be_empty
+      end
+    end
+  end
+
+  describe '#template' do
     let(:body) {{
       "collection" => { 
         "href"     => href,
@@ -55,13 +85,13 @@ describe Leif::CollectionJson::Collection do
         { "name" => "password", "value" => nil }
       ]
     }}
-    subject { collection.collection_template }
+    subject { collection.template }
 
     it 'returns the template' do
       expect(subject).to eq(template)
     end
 
-    it 'has an href' do
+    it "uses the collection's href" do
       expect(subject.href).to eq(href)
     end
 
@@ -74,7 +104,7 @@ describe Leif::CollectionJson::Collection do
       expect(subject.convert_to_json).to eq(expected_json)
     end
 
-    it 'can fill a file' do
+    it 'can fill a field' do
       updated = subject.fill_field 'email', 'arthur@dent.com'
       expect(updated.fetch('data')).to include('name'  => 'email',
                                                'value' => 'arthur@dent.com')
@@ -83,6 +113,36 @@ describe Leif::CollectionJson::Collection do
     end
   end
 
-  describe '#item_template'
-  describe '#items'
+  describe '#item_template' do
+    let(:body) {{
+      "collection" => {
+        "template" => template,
+        "items"    => [ item ]
+      }
+    }}
+    let(:template) {{ "data" => [{ "name" => "name", "value" => nil }] }}
+    let(:item) {{
+      "href" => href,
+      "data" => [
+        { "name" => "id",   "value" => 1 },
+        { "name" => "name", "value" => "Hitchhiker's Guide" }
+      ]
+    }}
+    let(:href) { double(:href) }
+    subject { collection.item_template(item) }
+
+    it 'returns the filled template' do
+      expected = { "data" => [{ "name"  => "name",
+                                "value" => "Hitchhiker's Guide" }] }
+      expect(subject).to eq(expected)
+    end
+
+    it "uses the item's href" do
+      expect(subject.href).to eq(href)
+    end
+
+    it 'has a method' do
+      expect(subject.method).to eq(:put)
+    end
+  end
 end
