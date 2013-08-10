@@ -18,14 +18,12 @@ module Leif
       end
     end
 
-    class Collection
+    class Collection < SimpleDelegator
       extend  Forwardable
       include Linked
 
-      def_delegators :@data, :fetch, :has_key?
-
       def initialize(body)
-        @data = body.fetch('collection')
+        super body.fetch('collection')
       end
 
       def items

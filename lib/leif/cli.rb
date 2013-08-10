@@ -139,6 +139,12 @@ module Leif
       end
     end
 
+    def print_collection
+      banner 'Collection' do |out|
+        out.print JSON.pretty_generate(collection).lines
+      end
+    end
+
     def print_template(template = collection.template, label = 'Template')
       banner label do |out|
         out.print JSON.pretty_generate(template).lines
@@ -264,9 +270,10 @@ EOS
       when      'create' then create_item
       when      'update' then update_item
 
-      when 'request'     then print_request;  get_next_action
-      when 'response'    then print_response; get_next_action
-      when 'template'    then print_template; get_next_action
+      when 'request'     then print_request;    get_next_action
+      when 'response'    then print_response;   get_next_action
+      when 'collection'  then print_collection; get_next_action
+      when 'template'    then print_template;   get_next_action
       when 'items'       then print_items
 
       when 'b', 'basic'  then request_basic_authentication(*args)
