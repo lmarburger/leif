@@ -106,7 +106,7 @@ module Leif
         puts 'Fill the template to create a new item.'
         name = ask('Name (empty to submit): ')
         break if name.empty?
-        value = ask('Value: ')
+        value = ask_for_primitive('Value: ')
 
         template = template.fill_field name, value
       end
@@ -140,7 +140,7 @@ module Leif
         puts 'Fill the template to update the item.'
         name = ask('Name (empty to submit): ')
         break if name.empty?
-        value = ask('Value: ')
+        value = ask_for_primitive('Value: ')
 
         template = template.fill_field name, value
       end
@@ -198,6 +198,25 @@ EOS
       puts
       input = ask('> ') {|q| q.readline = true }.split(/\s/)
       [ input.first, input[1..-1] ]
+    end
+
+    def ask_for_primitive(message)
+      value = ask(message)
+      case value
+      when 'null', 'nil' then nil
+      when '"null"'      then 'null'
+      when '"nil"'       then 'nil'
+
+      when 'true'    then true
+      when 'false'   then false
+      when '"true"'  then 'true'
+      when '"false"' then 'false'
+
+      when /\A\d+\Z/   then Integer(value)
+      when /\A"\d+"\Z/ then value[1..-2]
+
+      else value
+      end
     end
   end
 end

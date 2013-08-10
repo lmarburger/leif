@@ -69,3 +69,14 @@ Update an item filling the `password` field:
     Value: towel
 
     Name (empty to submit):
+
+JSON primitives (null, intergers, and booleans) are interpreted as such. Use
+quotes for literal strings.
+
+    > create
+
+    Name (empty to submit): private
+    Value: true
+
+    Name (empty to submit): name
+    Value: "true"
