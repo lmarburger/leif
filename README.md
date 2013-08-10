@@ -14,7 +14,8 @@ $ gem install leif
 $ leif
 ```
 
-`leif` includes a man page. To read it:
+`leif` includes a man page. Read it [on the web][manpage] or install
+`gem-man`:
 
 ``` bash
 $ gem install gem-man
@@ -73,3 +74,6 @@ sample workflow. It should give you a general overview of what's possible.
     Value: The Guide
 
     Name (empty to submit):
+
+
+[manpage]: http://cloudapp.github.io/leif
