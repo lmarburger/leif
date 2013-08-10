@@ -28,19 +28,6 @@ module Leif
         @data = body.fetch('collection')
       end
 
-      # def link_href(relation)
-      #   links.find {|link| link.fetch('rel') == relation }.fetch('href')
-      # end
-
-      # def link_relations
-      #   links.map {|link| link.fetch('rel') }
-      # end
-
-      # def links
-      #   return [] unless has_key?('links')
-      #   fetch('links')
-      # end
-
       def items
         return [] unless has_key?('items')
         fetch('items').map {|item| Item.new(item) }
