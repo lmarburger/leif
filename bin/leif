@@ -201,10 +201,10 @@ loop do
 end
 
 BEGIN {
-  require 'highline/import'
-  require 'json'
   require 'faraday'
   require 'faraday_middleware'
+  require 'highline/import'
+  require 'json'
   require 'logger'
   require 'stringio'
   require 'leif/collection_json'
