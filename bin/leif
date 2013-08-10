@@ -17,6 +17,10 @@ def debug_output
   @debug_output ||= StringIO.new
 end
 
+def banner(banner, &message)
+  Section.banner(banner, &message)
+end
+
 def reset_debug_output
   debug_output.rewind
   debug_output.truncate 0
@@ -40,59 +44,25 @@ def retry_request
   make_request @response.env[:url].request_uri
 end
 
-def section(banner)
-  puts
-  puts "-- #{banner} --"
-  output = Output.new(1)
-  yield output
-  output.print '[empty]' if output.empty?
-end
-
-class Output
-  attr_reader :level, :io
-  def empty?() @empty end
-
-  def initialize(level, io = $stdout)
-    @level = level
-    @io    = io
-    @empty = true
-  end
-
-  def print(line = '')
-    print_lines Array(line)
-  end
-
-  def print_lines(lines)
-    @empty = false
-    lines.each do |line|
-      io.puts(indentation + line)
-    end
-  end
-
-  def indentation
-    '  ' * level
-  end
-end
-
 def print_response
-  section 'Request' do |out|
+  banner 'Request' do |out|
     out.print "#{@response.env[:method].upcase} #{@response.env[:url]}"
-    out.print_lines @response.env[:request_headers].map {|header, value|
+    out.print @response.env[:request_headers].map {|header, value|
       "#{header}: #{value}"
     }
   end
 
-  section 'Response' do |out|
-    out.print_lines @response.headers.map {|header, value|
+  banner 'Response' do |out|
+    out.print @response.headers.map {|header, value|
       "#{header}: #{value}"
     }
   end
 
-  section 'Body' do |out|
-    out.print_lines JSON.pretty_generate(@response.body).lines
+  banner 'Body' do |out|
+    out.print JSON.pretty_generate(@response.body).lines
   end
 
-  section 'Links' do |out|
+  banner 'Links' do |out|
     unless collection.link_relations.empty?
       out.print collection.link_relations.join(', ')
     end
@@ -117,11 +87,11 @@ def follow_link(relation = :ask)
 end
 
 def create_item
-  template = collection.collection_template
+  template = collection.template
 
   loop do
-    section 'Create Item' do |out|
-      out.print_lines JSON.pretty_generate(template).lines
+    banner 'Create Item' do |out|
+      out.print JSON.pretty_generate(template).lines
     end
 
     puts
@@ -138,8 +108,8 @@ end
 
 def update_item
   item = collection.items.find do |item|
-    section 'Item' do |out|
-      out.print_lines JSON.pretty_generate(item).lines
+    banner 'Item' do |out|
+      out.print JSON.pretty_generate(item).lines
     end
 
     puts
@@ -154,8 +124,8 @@ def update_item
   template = collection.item_template item
 
   loop do
-    section 'Update Item' do |out|
-      out.print_lines JSON.pretty_generate(template).lines
+    banner 'Update Item' do |out|
+      out.print JSON.pretty_generate(template).lines
     end
 
     puts
@@ -171,9 +141,9 @@ def update_item
 end
 
 def print_debug
-  section 'Debug' do |out|
+  banner 'Debug' do |out|
     debug_output.rewind
-    out.print_lines debug_output.readlines
+    out.print debug_output.readlines
   end
 end
 
@@ -238,4 +208,5 @@ BEGIN {
   require 'logger'
   require 'stringio'
   require 'leif/collection_json'
+  require 'leif/section'
 }
