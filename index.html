@@ -111,9 +111,18 @@ prompted for username and password if omitted.</p></dd>
 
 <h2 id="EXAMPLES">EXAMPLES</h2>
 
-<p>Follow a rel=account link:</p>
+<p>Follow a rel=account link on the collection:</p>
 
 <pre><code>&gt; follow account
+</code></pre>
+
+<p>Select an item and follow its rel=collection link:</p>
+
+<pre><code>&gt; items
+
+Select this item [y,n]? y
+
+&gt; follow collection
 </code></pre>
 
 <p>Use HTTP Basic authentication and reload the current resource:</p>
@@ -143,9 +152,11 @@ Name (empty to submit):
 
 <p>Update an item filling the <code>password</code> field:</p>
 
-<pre><code>&gt; update
+<pre><code>&gt; items
 
-Select this item to update [y,n]? y
+Select this item [y,n]? y
+
+&gt; update
 
 Name (empty to submit): password
 Value: towel
