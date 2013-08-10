@@ -11,7 +11,7 @@ end
 Leif::Cli.new.tap do |cli|
   cli.get_root
   loop do
-    cli.print_response
+    cli.print_overview
     cli.get_next_action
   end
 end

@@ -52,19 +52,9 @@ module Leif
       make_request @response.env[:url].request_uri
     end
 
-    def print_response
-      banner 'Request' do |out|
-        out.print "#{@response.env[:method].upcase} #{@response.env[:url]}"
-        out.print @response.env[:request_headers].map {|header, value|
-          "#{header}: #{value}"
-        }
-      end
-
-      banner 'Response' do |out|
-        out.print @response.headers.map {|header, value|
-          "#{header}: #{value}"
-        }
-      end
+    def print_overview
+      print_request
+      print_response
 
       banner 'Body' do |out|
         out.print JSON.pretty_generate(@response.body).lines
@@ -98,10 +88,7 @@ module Leif
       template = collection.template
 
       loop do
-        banner 'Create Item' do |out|
-          out.print JSON.pretty_generate(template).lines
-        end
-
+        print_template template, 'Create Item'
         puts
         puts 'Fill the template to create a new item.'
         name = ask('Name (empty to submit): ')
@@ -132,10 +119,7 @@ module Leif
       template = collection.item_template item
 
       loop do
-        banner 'Update Item' do |out|
-          out.print JSON.pretty_generate(template).lines
-        end
-
+        print_template template, 'Update Item'
         puts
         puts 'Fill the template to update the item.'
         name = ask('Name (empty to submit): ')
@@ -146,6 +130,33 @@ module Leif
       end
 
       make_request template.href, template.convert_to_json, template.method
+    end
+
+    def print_request
+      banner 'Request' do |out|
+        out.print "#{@response.env[:method].upcase} #{@response.env[:url]}"
+        out.print @response.env[:request_headers].map {|header, value|
+          "#{header}: #{value}"
+        }
+      end
+    end
+
+    def print_response
+      banner 'Response' do |out|
+        out.print @response.headers.map {|header, value|
+          "#{header}: #{value}"
+        }
+      end
+    end
+
+    def print_template(template = collection.template, label = 'Template')
+      banner label do |out|
+        out.print JSON.pretty_generate(template).lines
+      end
+    end
+
+    def print_items
+      raise 'items'
     end
 
     def print_debug
@@ -185,8 +196,14 @@ EOS
       when 'f', 'follow' then follow_link(*args)
       when      'create' then create_item
       when      'update' then update_item
+
+      when 'request'     then print_request;  get_next_action
+      when 'response'    then print_response; get_next_action
+      when 'template'    then print_template; get_next_action
+
       when 'b', 'basic'  then request_basic_authentication(*args)
       when 't', 'token'  then request_token_authentication(*args)
+
       when 'd', 'debug'  then print_debug; get_next_action
       when '?', 'help'   then print_help; get_next_action
       when 'q', 'quit'   then exit

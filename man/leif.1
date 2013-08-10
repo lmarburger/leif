@@ -20,11 +20,27 @@ Go back to the root
 .
 .TP
 \fBfollow\fR \fIrel\fR
-Follow link with the given relation\.
+Follow link with the relation \fIrel\fR\.
 .
 .TP
-\fBtemplate\fR [\fIname\fR=\fIvalue\fR\.\.\.]
-Fill the template with the given name/value pairs and submit\.
+\fBcreate\fR
+Begin editing the template to create a new item\.
+.
+.TP
+\fBupdate\fR
+Iterate through each item in the last response\. Upon selection, begin editing the template to update it\.
+.
+.TP
+\fBrequest\fR
+Reprint the details of the last request\.
+.
+.TP
+\fBresponse\fR
+Reprint the details of the last response\.
+.
+.TP
+\fBtemplate\fR
+Print the template from the last response\.
 .
 .TP
 \fBbasic\fR [\fIusername\fR [\fIpassword\fR]]
@@ -121,7 +137,7 @@ Name (empty to submit):
 .IP "" 0
 .
 .P
-JSON primitives (null, intergers, and booleans) are interpreted as such\. Use quotes for literal strings\.
+JSON primitives (null, integers, and booleans) are interpreted as such\. Use quotes for literal strings\.
 .
 .IP "" 4
 .

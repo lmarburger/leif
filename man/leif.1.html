@@ -91,8 +91,13 @@ programs.</p>
 
 <dl>
 <dt class="flush"><code>root</code></dt><dd><p>Go back to the root</p></dd>
-<dt><code>follow</code> <var>rel</var></dt><dd><p>Follow link with the given relation.</p></dd>
-<dt><code>template</code> [<var>name</var>=<var>value</var>...]</dt><dd><p>Fill the template with the given name/value pairs and submit.</p></dd>
+<dt><code>follow</code> <var>rel</var></dt><dd><p>Follow link with the relation <var>rel</var>.</p></dd>
+<dt class="flush"><code>create</code></dt><dd><p>Begin editing the template to create a new item.</p></dd>
+<dt class="flush"><code>update</code></dt><dd><p>Iterate through each item in the last response. Upon selection, begin
+editing the template to update it.</p></dd>
+<dt class="flush"><code>request</code></dt><dd><p>Reprint the details of the last request.</p></dd>
+<dt><code>response</code></dt><dd><p>Reprint the details of the last response.</p></dd>
+<dt><code>template</code></dt><dd><p>Print the template from the last response.</p></dd>
 <dt><code>basic</code> [<var>username</var> [<var>password</var>]]</dt><dd><p>Authenticate with HTTP Basic and reload the current resource. Will be
 prompted for username and password if omitted.</p></dd>
 <dt><code>token</code> <var>token</var></dt><dd><p>Authenticate using the given token and reload the current resource.</p></dd>
@@ -144,7 +149,7 @@ Value: towel
 Name (empty to submit):
 </code></pre>
 
-<p>JSON primitives (null, intergers, and booleans) are interpreted as such. Use
+<p>JSON primitives (null, integers, and booleans) are interpreted as such. Use
 quotes for literal strings.</p>
 
 <pre><code>&gt; create
