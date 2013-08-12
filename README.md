@@ -22,6 +22,8 @@ $ gem install gem-man
 $ gem man leif
 ```
 
+[manpage]: http://cloudapp.github.io/leif
+
 ## Interactive Commands
 
   - `root`:
@@ -79,35 +81,69 @@ $ gem man leif
 The UI is weak at this point and not very intuitive. To get started, here's a
 sample workflow. It should give you a general overview of what's possible.
 
+    $ leif
+    ...
+
+    -- Links --
+      account, authorization
+
     > follow authorization
+    ...
 
     > basic arthur@dent.com
     Password: *****
+    ...
+    {
+      "name": "token",
+      "value": "2c2p2B2Y0U3y3c2c"
+    },
+    ...
 
-    > token <token copied from response body>
+    > token 2c2p2B2Y0U3y3c2c
+    ...
+
+    -- Links --
+      drops, drops-template, stream, store
 
     > follow drops
-    > follow next
-    > follow first
+    ...
 
     > create
+    ...
+    Fill the template to create a new item.
+    name [null]: New Drop
+    private [null]: false
+    trash [false]:
+    bookmark_url [null]: http://getcloudapp.com
+    file_size [null]:
+    ...
 
-    Name (empty to submit): name
-    Value: CloudApp
+    > items
+    ...
+    Select this item [y,n]? y
 
-    Name (empty to submit): bookmark_url
-    Value: http://getcloudapp.com
+    -- Links --
+      collection, canonical, icon
 
-    Name (empty to submit):
+    > follow collection
+    ...
+
+    > items
+    ...
+    Select this item [y,n]? y
+    ...
+
+    > update
+    ...
+    Fill the template to update the item.
+    name ["New Drop"]: Updated Drop
+    private [false]:
+    trash [false]:
+    bookmark_url [null]:
+    file_size [null]:
+    ...
 
     > root
-    > follow drops
-    > update
-
-    Name (empty to submit): name
-    Value: The Guide
-
-    Name (empty to submit):
-
-
-[manpage]: http://cloudapp.github.io/leif
+    ...
+    -- Links --
+      drops, drops-template, account, stream
