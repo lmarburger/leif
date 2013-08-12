@@ -47,12 +47,18 @@ module Leif
       end
 
       class Template < SimpleDelegator
+        include Enumerable
+
         attr_accessor :href, :method
 
         def initialize(template, href, method)
           @href   = href
           @method = method
           super template
+        end
+
+        def each(&block)
+          convert_to_json.each(&block)
         end
 
         def convert_to_json

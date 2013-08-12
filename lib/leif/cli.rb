@@ -76,38 +76,29 @@ module Leif
       make_request subject.link_href(relation)
     end
 
-    def create_item
-      template = collection.template
-
-      loop do
-        print_template template, 'Create Item'
-        puts
-        puts 'Fill the template to create a new item.'
-        name = ask('Name (empty to submit): ')
-        break if name.empty?
-        value = ask_for_primitive('Value: ')
-
-        template = template.fill_field name, value
+    def fill_and_submit_template(template, label)
+      print_template template
+      puts
+      puts label
+      template.each do |name, value|
+        printed_value = value.inspect
+        printed_value = 'null' if printed_value == 'nil'
+        new_value = ask("#{name} [#{printed_value}]: ")
+        new_value = new_value.empty? ? value : convert_to_primitive(new_value)
+        template  = template.fill_field name, new_value
       end
 
       make_request template.href, template.convert_to_json, template.method
     end
 
+    def create_item
+      fill_and_submit_template collection.template,
+                               'Fill the template to create a new item.'
+    end
+
     def update(item)
-      template = collection.item_template item
-
-      loop do
-        print_template template, 'Update Item'
-        puts
-        puts 'Fill the template to update the item.'
-        name = ask('Name (empty to submit): ')
-        break if name.empty?
-        value = ask_for_primitive('Value: ')
-
-        template = template.fill_field name, value
-      end
-
-      make_request template.href, template.convert_to_json, template.method
+      fill_and_submit_template collection.item_template(item),
+                               'Fill the template to update the item.'
     end
 
     def print_request
@@ -147,8 +138,8 @@ module Leif
       end
     end
 
-    def print_template(template = collection.template, label = 'Template')
-      banner label do |out|
+    def print_template(template = collection.template)
+      banner 'Template' do |out|
         out.print JSON.pretty_generate(template).lines
       end
     end
@@ -270,7 +261,6 @@ EOS
       when 'r', 'root'   then get_root
       when 'f', 'follow' then follow_link(collection, *args)
       when      'create' then create_item
-      when      'update' then update_item
 
       when 'request'     then print_request;    get_next_action
       when 'response'    then print_response;   get_next_action
@@ -301,12 +291,12 @@ EOS
       [ input.first, input[1..-1] ]
     end
 
-    def ask_for_primitive(message)
-      value = ask(message)
+    def convert_to_primitive(value)
       case value
-      when 'null', 'nil' then nil
-      when '"null"'      then 'null'
-      when '"nil"'       then 'nil'
+      when 'null', 'nil', '' then nil
+      when '"null"' then 'null'
+      when '"nil"'  then 'nil'
+      when '""'     then ''
 
       when 'true'    then true
       when 'false'   then false

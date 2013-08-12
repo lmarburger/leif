@@ -124,6 +124,12 @@ describe Leif::CollectionJson::Collection do
       expect(subject.fetch('data')).to include('name'  => 'email',
                                                'value' => nil)
     end
+
+    it 'iterates over each field' do
+      expect {|probe| subject.each(&probe) }.
+        to yield_successive_args([ 'email',    nil ],
+                                 [ 'password', nil ])
+    end
   end
 
   describe '#item_template' do
@@ -156,6 +162,11 @@ describe Leif::CollectionJson::Collection do
 
     it 'has a method' do
       expect(subject.method).to eq(:put)
+    end
+
+    it 'iterates over each field' do
+      expect {|probe| subject.each(&probe) }.
+        to yield_successive_args([ 'name', "Hitchhiker's Guide" ])
     end
   end
 end
