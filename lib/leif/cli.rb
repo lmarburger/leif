@@ -1,27 +1,28 @@
-require 'faraday'
-require 'faraday_middleware'
 require 'highline/import'
 require 'json'
-require 'logger'
-require 'stringio'
+require 'leif/connection'
 
 module Leif
   class Cli
-    def conn
-      @conn ||= Faraday.new(url: 'https://api.getcloudapp.com') do |config|
-        config.request  :url_encoded
-        config.response :logger, logger
-        config.response :json, :content_type => /\bjson$/
-        config.adapter  Faraday.default_adapter
-      end
+    attr_reader :last_exchange, :connection
+
+    def initialize
+      @connection = Connection.to_url('https://api.getcloudapp.com')
     end
 
-    def logger
-      @logger ||= Logger.new(debug_output)
+    def basic_auth(username, password)
+      @connection = Connection.to_url('https://api.getcloudapp.com',
+                                      username: username,
+                                      password: password)
     end
 
-    def debug_output
-      @debug_output ||= StringIO.new
+    def token_auth(token)
+      @connection = Connection.to_url('https://api.getcloudapp.com',
+                                      token: token)
+    end
+
+    def request(*args)
+      @last_exchange = connection.request(*args)
     end
 
     def banner(banner, &message)
@@ -29,27 +30,16 @@ module Leif
       Section.banner(banner, &message)
     end
 
-    def reset_debug_output
-      debug_output.rewind
-      debug_output.truncate 0
-    end
-
-    def make_request(uri, data = {}, method = :unset)
-      method = data.empty? ? :get : :post if method == :unset
-      reset_debug_output
-      @response = conn.send(method, uri, data)
-    end
-
     def collection
-      Leif::CollectionJson::Collection.new(@response.body)
+      Leif::CollectionJson::Collection.new(last_exchange.response_body)
     end
 
     def get_root
-      make_request '/'
+      request '/'
     end
 
     def retry_request
-      make_request @response.env[:url].request_uri
+      request last_exchange.uri
     end
 
     def print_overview
@@ -59,21 +49,21 @@ module Leif
       print_links collection
     end
 
-    def request_basic_authentication(username = :ask, password = :ask)
+    def set_basic_auth(username = :ask, password = :ask)
       username = ask('Username: ')                     if username == :ask
       password = ask('Password: ') {|q| q.echo = '*' } if password == :ask
-      conn.basic_auth username, password
+      basic_auth username, password
       retry_request
     end
 
-    def request_token_authentication(token = '2x033S09401z300E')
-      conn.headers['Authorization'] = "Token token=#{token.inspect}"
+    def set_token_auth(token = '2x033S09401z300E')
+      token_auth token
       retry_request
     end
 
     def follow_link(subject, relation = :ask)
       relation = ask('Relation: ') if relation == :ask
-      make_request subject.link_href(relation)
+      request subject.link_href(relation)
     end
 
     def fill_and_submit_template(template, label)
@@ -88,7 +78,7 @@ module Leif
         template  = template.fill_field name, new_value
       end
 
-      make_request template.href, template.convert_to_json, template.method
+      request template.href, template.convert_to_json, template.method
     end
 
     def create_item
@@ -103,8 +93,8 @@ module Leif
 
     def print_request
       banner 'Request' do |out|
-        out.print "#{@response.env[:method].upcase} #{@response.env[:url]}"
-        out.print @response.env[:request_headers].map {|header, value|
+        out.print "#{last_exchange.method} #{last_exchange.uri}"
+        out.print last_exchange.request_headers.map {|header, value|
           "#{header}: #{value}"
         }
       end
@@ -112,7 +102,7 @@ module Leif
 
     def print_response
       banner 'Response' do |out|
-        out.print @response.headers.map {|header, value|
+        out.print last_exchange.response_headers.map {|header, value|
           "#{header}: #{value}"
         }
       end
@@ -120,7 +110,7 @@ module Leif
 
     def print_body
       banner 'Body' do |out|
-        out.print JSON.pretty_generate(@response.body).lines
+        out.print JSON.pretty_generate(last_exchange.response_body).lines
       end
     end
 
@@ -173,8 +163,7 @@ module Leif
 
     def print_debug
       banner 'Debug' do |out|
-        debug_output.rewind
-        out.print debug_output.readlines
+        out.print last_exchange.debug
       end
     end
 
@@ -269,8 +258,8 @@ EOS
       when 'template'    then print_template;   get_next_action
       when 'items'       then print_items
 
-      when 'b', 'basic'  then request_basic_authentication(*args)
-      when 't', 'token'  then request_token_authentication(*args)
+      when 'b', 'basic'  then set_basic_auth(*args)
+      when 't', 'token'  then set_token_auth(*args)
 
       when 'd', 'debug'  then print_debug; get_next_action
       when '?', 'help'   then print_help; get_next_action
