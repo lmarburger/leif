@@ -161,12 +161,6 @@ module Leif
       end
     end
 
-    def print_debug
-      banner 'Debug' do |out|
-        out.print last_exchange.debug
-      end
-    end
-
     def print_help
       banner 'Help' do |out|
         out.print <<EOS.lines
@@ -198,9 +192,6 @@ basic [<username> [<password>]]:
 
 token <token>:
   Authenticate using the given token and reload the current resource.
-
-debug:
-  Print debug output from the previous HTTP request and response.
 
 quit:
   Exit leif.
@@ -261,7 +252,6 @@ EOS
       when 'b', 'basic'  then set_basic_auth(*args)
       when 't', 'token'  then set_token_auth(*args)
 
-      when 'd', 'debug'  then print_debug; get_next_action
       when '?', 'help'   then print_help; get_next_action
       when 'q', 'quit'   then exit
       else puts 'Try again.'; get_next_action

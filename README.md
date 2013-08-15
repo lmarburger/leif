@@ -67,9 +67,6 @@ $ gem man leif
   - `token` <u>token</u>:
     Authenticate using the given token and reload the current resource.
 
-  - `debug`:
-    Print debug output from the previous HTTP request and response.
-
   - `help`:
     Print available commands.
 
