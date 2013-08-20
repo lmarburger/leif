@@ -4,21 +4,21 @@ require 'leif/connection'
 
 module Leif
   class Cli
+    ENDPOINT = 'https://api.getcloudapp.com'
     attr_reader :last_exchange, :connection
 
     def initialize
-      @connection = Connection.to_url('https://api.getcloudapp.com')
+      @connection = Connection.to_url(ENDPOINT)
     end
 
     def basic_auth(username, password)
-      @connection = Connection.to_url('https://api.getcloudapp.com',
+      @connection = Connection.to_url(ENDPOINT,
                                       username: username,
                                       password: password)
     end
 
     def token_auth(token)
-      @connection = Connection.to_url('https://api.getcloudapp.com',
-                                      token: token)
+      @connection = Connection.to_url(ENDPOINT, token: token)
     end
 
     def request(*args)
