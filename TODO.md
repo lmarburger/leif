@@ -9,6 +9,7 @@
  - Request body isn't shown
  - Fill template field with file
  - Persist basic auth
+ - `back`/`forward` commands
 
 # Go Nuts
 
