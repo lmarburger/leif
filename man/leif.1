@@ -7,10 +7,19 @@
 \fBleif\fR \- A hypermedia browser for the CloudApp Collection+JSON API\.
 .
 .SH "SYNOPSIS"
-\fBleif\fR
+\fBleif\fR [\fI\-\-insecure\fR] [\fIurl\fR]
 .
 .SH "DESCRIPTION"
 \fBleif\fR is a program to explore the CloudApp hypermedia API\. It was built so developers could feel how the API flows to help them consume it in their programs\.
+.
+.P
+Provide a \fIurl\fR to use as the API root\. With no \fIurl\fR option, the endpoint \fBhttps://api\.getcloudapp\.com\fR is used\.
+.
+.SH "OPTIONS"
+.
+.TP
+\fB\-\-insecure\fR
+Do not attempt to verify SSL certificates\.
 .
 .SH "INTERACTIVE COMMANDS"
 .

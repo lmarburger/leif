@@ -2,13 +2,21 @@
 
 ## SYNOPSIS
 
-`leif`
+`leif` [<--insecure>] [<url>]
 
 ## DESCRIPTION
 
 `leif` is a program to explore the CloudApp hypermedia API. It was built so
 developers could feel how the API flows to help them consume it in their
 programs.
+
+Provide a <url> to use as the API root. With no <url> option, the endpoint
+`https://api.getcloudapp.com` is used.
+
+## OPTIONS
+
+  - `--insecure`:
+    Do not attempt to verify SSL certificates.
 
 ## INTERACTIVE COMMANDS
 

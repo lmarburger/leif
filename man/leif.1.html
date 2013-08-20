@@ -62,6 +62,7 @@
     <a href="#NAME">NAME</a>
     <a href="#SYNOPSIS">SYNOPSIS</a>
     <a href="#DESCRIPTION">DESCRIPTION</a>
+    <a href="#OPTIONS">OPTIONS</a>
     <a href="#INTERACTIVE-COMMANDS">INTERACTIVE COMMANDS</a>
     <a href="#EXAMPLES">EXAMPLES</a>
   </div>
@@ -79,13 +80,23 @@
 
 <h2 id="SYNOPSIS">SYNOPSIS</h2>
 
-<p><code>leif</code></p>
+<p><code>leif</code> [<var>--insecure</var>] [<var>url</var>]</p>
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
 <p><code>leif</code> is a program to explore the CloudApp hypermedia API. It was built so
 developers could feel how the API flows to help them consume it in their
 programs.</p>
+
+<p>Provide a <var>url</var> to use as the API root. With no <var>url</var> option, the endpoint
+<code>https://api.getcloudapp.com</code> is used.</p>
+
+<h2 id="OPTIONS">OPTIONS</h2>
+
+<dl>
+<dt><code>--insecure</code></dt><dd>Do not attempt to verify SSL certificates.</dd>
+</dl>
+
 
 <h2 id="INTERACTIVE-COMMANDS">INTERACTIVE COMMANDS</h2>
 
