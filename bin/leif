@@ -4,7 +4,8 @@ require 'leif/collection_json'
 require 'leif/section'
 
 insecure = !!ARGV.delete('--insecure')
-Leif::Cli.new(ssl_verify: !insecure).tap do |cli|
+endpoint = ARGV.last
+Leif::Cli.new(endpoint, ssl_verify: !insecure).tap do |cli|
   cli.get_root
   loop do
     cli.print_overview
