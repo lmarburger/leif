@@ -38,7 +38,7 @@ module Leif
       request '/'
     end
 
-    def retry_request
+    def reload
       request last_exchange.uri
     end
 
@@ -53,12 +53,12 @@ module Leif
       username = ask('Username: ')                     if username == :ask
       password = ask('Password: ') {|q| q.echo = '*' } if password == :ask
       basic_auth username, password
-      retry_request
+      reload
     end
 
     def set_token_auth(token = '2x033S09401z300E')
       token_auth token
-      retry_request
+      reload
     end
 
     def follow_link(subject, relation = :ask)
@@ -238,7 +238,8 @@ EOS
     def get_next_action
       command, args = ask_for_action
       case command
-      when 'r', 'root'   then get_root
+      when      'root'   then get_root
+      when      'reload' then reload
       when 'f', 'follow' then follow_link(collection, *args)
       when      'create' then create_item
 

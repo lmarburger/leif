@@ -15,6 +15,9 @@ programs.
   - `root`:
     Go back to the root.
 
+  - `reload`:
+    Make a GET request to the last request URI.
+
   - `follow` <rel>:
     Follow link with the relation <rel> on the collection or selected item.
 
