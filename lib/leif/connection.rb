@@ -10,7 +10,7 @@ module Leif
     end
 
     def self.to_url(url, options = {})
-      connection = default_connection(url)
+      connection = default_connection(url, options)
       if options.has_key?(:username) and options.has_key?(:password)
         connection.basic_auth options.fetch(:username),
                               options.fetch(:password)
@@ -20,8 +20,9 @@ module Leif
       new(connection)
     end
 
-    def self.default_connection(url)
-      Faraday.new(url: url) do |config|
+    def self.default_connection(url, options = {})
+      ssl_verify = options.fetch(:ssl_verify, true)
+      Faraday.new(url: url, ssl: { verify: ssl_verify }) do |config|
         config.request  :url_encoded
         config.response :json, :content_type => /\bjson$/
         config.adapter  Faraday.default_adapter

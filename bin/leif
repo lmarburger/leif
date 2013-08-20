@@ -3,7 +3,8 @@ require 'leif/cli'
 require 'leif/collection_json'
 require 'leif/section'
 
-Leif::Cli.new.tap do |cli|
+insecure = !!ARGV.delete('--insecure')
+Leif::Cli.new(ssl_verify: !insecure).tap do |cli|
   cli.get_root
   loop do
     cli.print_overview

@@ -7,18 +7,24 @@ module Leif
     ENDPOINT = 'https://api.getcloudapp.com'
     attr_reader :last_exchange, :connection
 
-    def initialize
-      @connection = Connection.to_url(ENDPOINT)
+    def initialize(connection_options = {})
+      @connection_options = connection_options
+      @connection = Connection.to_url(ENDPOINT, connection_options)
     end
 
     def basic_auth(username, password)
       @connection = Connection.to_url(ENDPOINT,
-                                      username: username,
-                                      password: password)
+                                      connection_options(username: username,
+                                                         password: password))
     end
 
     def token_auth(token)
-      @connection = Connection.to_url(ENDPOINT, token: token)
+      @connection = Connection.to_url(ENDPOINT,
+                                      connection_options(token: token))
+    end
+
+    def connection_options(options = {})
+      @connection_options.merge(options)
     end
 
     def request(*args)

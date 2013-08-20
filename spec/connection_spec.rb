@@ -3,11 +3,24 @@ require 'uri'
 
 describe Leif::Connection do
   describe '.to_url' do
-    let(:url) { 'http://getcloudapp.com/path' }
-    subject { Leif::Connection.to_url(url) }
+    let(:url)     { 'http://getcloudapp.com/path' }
+    let(:options) { {} }
+    subject { Leif::Connection.to_url(url, options) }
 
     it 'creates a connection to the given url' do
       expect(subject.connection.host).to eq('getcloudapp.com')
+    end
+
+    it 'verifies certificates' do
+      expect(subject.connection.ssl).to eq(verify: true)
+    end
+
+    context 'without certificate verification' do
+      let(:options) {{ ssl_verify: false }}
+
+      it 'does not verify certificates' do
+        expect(subject.connection.ssl).to eq(verify: false)
+      end
     end
 
     context 'with basic auth' do
