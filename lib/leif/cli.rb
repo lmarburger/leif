@@ -144,6 +144,7 @@ module Leif
 
     def print_items
       item = select_item
+      return unless item
       print_links item
       get_next_item_action item
     rescue Interrupt
