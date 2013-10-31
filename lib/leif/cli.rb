@@ -175,6 +175,9 @@ module Leif
 root:
   Go back to the root.
 
+reload:
+  Reload the current resource.
+
 follow <rel>:
   Follow link with the relation <rel> on the collection.
 
@@ -186,6 +189,12 @@ request:
 
 response:
   Reprint the details of the last response.
+
+body:
+  Print the body of the last response.
+
+collection:
+  Print the collection from the last response.
 
 template:
   Print the template from the last response.
