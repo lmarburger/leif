@@ -1,5 +1,8 @@
 # TODO
 
+ - `error` command that works just like `items` but for an error
+   representation
+ - Copy to clipboard command: `copy {item,collection,response,...}`
  - Query templates
  - `items` > `delete`: Delete the current item
  - Add relevance checking to commands (e.g., `update` when there is no template)
@@ -10,6 +13,8 @@
  - Fill template field with file
  - Persist basic auth
  - `back`/`forward` commands
+ - Lint flag: show warnings if responses don't conform with media type
+ - Fail through to `follow` if given command doesn't match
 
 # Go Nuts
 
