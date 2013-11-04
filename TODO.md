@@ -16,6 +16,7 @@
  - `back`/`forward` commands
  - Lint flag: show warnings if responses don't conform with media type
  - Fail through to `follow` if given command doesn't match
+ - CLI option to request root with Basic Auth
 
 # Go Nuts
 
