@@ -1,5 +1,6 @@
 # TODO
 
+ - Automation: Pass a series of newline-separated commands to perform.
  - `error` command that works just like `items` but for an error
    representation
  - Copy to clipboard command: `copy {item,collection,response,...}`
