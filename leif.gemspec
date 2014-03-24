@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.description = 'A hypermedia browser for the CloudApp Collection+JSON API.'
   spec.authors     = ['Larry Marburger']
   spec.email       = 'larry@marburger.cc'
-  spec.homepage    = 'https://github.com/cloudapp/leif'
+  spec.homepage    = 'https://github.com/lmarburger/leif'
   spec.licenses    = ['MIT']
 
   spec.add_dependency 'faraday',            '~> 0.8.8'

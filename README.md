@@ -22,7 +22,7 @@ $ gem install gem-man
 $ gem man leif
 ```
 
-[manpage]: http://cloudapp.github.io/leif
+[manpage]: http://lmarburger.github.io/leif
 
 ## Interactive Commands
 
